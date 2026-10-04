@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Card Scanner</string>
+
+    <!-- Scanner screen -->
+    <string name="scan_title">Scan Payment Card</string>
+    <string name="place_card_in_frame">Place the card inside the frame</string>
+    <string name="card_detected">Card detected</string>
+    <string name="hold_still">Hold still…</string>
+    <string name="reading_card">Reading card…</string>
+    <string name="move_closer">Move closer</string>
+    <string name="improve_lighting">Improve lighting</string>
+    <string name="flash_toggle">Toggle flash</string>
+    <string name="manual_capture">Capture manually</string>
+    <string name="scan_history">Scan history</string>
+    <string name="export_excel">Export to Excel</string>
+    <string name="camera_permission_rationale">Camera access is required to scan a payment card. No photo is ever saved.</string>
+    <string name="grant_camera_permission">Grant camera access</string>
+
+    <!-- Confidence indicator -->
+    <string name="confidence_poor">Poor</string>
+    <string name="confidence_fair">Fair</string>
+    <string name="confidence_good">Good</string>
+    <string name="confidence_excellent">Excellent</string>
+
+    <!-- Confirmation screen -->
+    <string name="card_detected_title">Card detected</string>
+    <string name="field_brand">Brand</string>
+    <string name="field_card">Card</string>
+    <string name="field_expiry">Expiry</string>
+    <string name="field_cardholder">Cardholder</string>
+    <string name="confirm_and_save">Confirm &amp; Save</string>
+    <string name="rescan">Rescan</string>
+    <string name="edit">Edit</string>
+    <string name="verify_cardholder_name">Please verify the cardholder name</string>
+    <string name="verify_expiration_date">Please verify expiration date</string>
+    <string name="unsupported_card_title">Unsupported card</string>
+    <string name="unsupported_card_message">This does not appear to be a Visa card. Only Visa cards are supported.</string>
+
+    <!-- Edit screen -->
+    <string name="edit_title">Edit record</string>
+    <string name="cardholder_name">Cardholder name</string>
+    <string name="expiration_date">Expiration date (MM/YYYY)</string>
+    <string name="notes">Notes</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="invalid_expiry_format">Use MM/YYYY, e.g. 12/2029</string>
+    <string name="masked_card_readonly">Card number (read-only, masked)</string>
+
+    <!-- History screen -->
+    <string name="history_title">Scan History</string>
+    <string name="search_hint">Search last 4, name, year, brand</string>
+    <string name="no_records">No cards scanned yet</string>
+    <string name="delete_record">Delete record</string>
+    <string name="delete_confirm">Delete this record? This cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="records_count">%1$d records</string>
+    <string name="clear_search">Clear search</string>
+
+    <!-- Export -->
+    <string name="export_to_excel">Export to Excel</string>
+    <string name="share_excel_file">Share Excel File</string>
+    <string name="export_success">Export complete</string>
+    <string name="export_cancelled">Export cancelled</string>
+    <string name="export_failed">Excel export failed. Please try again.</string>
+    <string name="export_security_rejected">Export rejected: the file contains data that must never be exported.</string>
+    <string name="export_no_records">There are no records to export</string>
+    <string name="export_create_file">Create file</string>
+    <string name="export_scan_again">The exported file was re-verified before sharing.</string>
+
+    <!-- Duplicate detection -->
+    <string name="duplicate_title">Possible duplicate</string>
+    <string name="duplicate_message">This card appears to have already been scanned.</string>
+    <string name="save_another_record">Save Another Record</string>
+
+    <!-- Errors -->
+    <string name="error_camera_unavailable">Camera is unavailable. Another application may be using it.</string>
+    <string name="error_permission_denied">Camera permission was denied. Enable it in system settings to scan cards.</string>
+    <string name="error_card_not_detected">Card could not be recognized. Try placing the card on a flat surface with better lighting.</string>
+    <string name="error_ocr_failure">Card could not be read. Try again with the card face up and well lit.</string>
+    <string name="error_invalid_card">Invalid card number.</string>
+    <string name="error_luhn_failure">The card number failed validation. Try scanning again.</string>
+    <string name="error_unsupported_card">This card is not supported. Only Visa cards can be scanned.</string>
+    <string name="error_missing_expiry">Expiration date was not found. You can enter it manually.</string>
+    <string name="error_missing_cardholder">Cardholder name was not found. You can enter it manually.</string>
+    <string name="error_invalid_expiry">Expiration date is invalid.</string>
+    <string name="error_duplicate_record">This card has already been scanned.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="ok">OK</string>
+    <string name="retry">Retry</string>
+    <string name="close">Close</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_card_frame">Card scanning frame. Position the payment card fully inside this frame.</string>
+    <string name="a11y_confidence_indicator">Recognition quality: %1$s</string>
+    <string name="a11y_back">Go back</string>
+    <string name="a11y_scan_state">Scanner status: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_security_note">This app never stores the full card number, CVV, or card images. All processing happens on this device only.</string>
+</resources>

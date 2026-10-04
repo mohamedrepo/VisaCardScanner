@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ماسح البطاقات</string>
+
+    <!-- Scanner screen -->
+    <string name="scan_title">مسح بطاقة الدفع</string>
+    <string name="place_card_in_frame">ضع البطاقة داخل الإطار</string>
+    <string name="card_detected">تم اكتشاف البطاقة</string>
+    <string name="hold_still">ابقَ ثابتًا…</string>
+    <string name="reading_card">جارٍ قراءة البطاقة…</string>
+    <string name="move_closer">اقترب أكثر</string>
+    <string name="improve_lighting">حسّن الإضاءة</string>
+    <string name="flash_toggle">تشغيل/إيقاف الفلاش</string>
+    <string name="manual_capture">التقاط يدوي</string>
+    <string name="scan_history">سجل المسح</string>
+    <string name="export_excel">تصدير إلى Excel</string>
+    <string name="camera_permission_rationale">مطلوب الوصول إلى الكاميرا لمسح بطاقة الدفع. لن يتم حفظ أي صورة أبدًا.</string>
+    <string name="grant_camera_permission">منح الوصول إلى الكاميرا</string>
+
+    <!-- Confidence indicator -->
+    <string name="confidence_poor">ضعيف</string>
+    <string name="confidence_fair">مقبول</string>
+    <string name="confidence_good">جيد</string>
+    <string name="confidence_excellent">ممتاز</string>
+
+    <!-- Confirmation screen -->
+    <string name="card_detected_title">تم اكتشاف البطاقة</string>
+    <string name="field_brand">الشركة</string>
+    <string name="field_card">البطاقة</string>
+    <string name="field_expiry">تاريخ الانتهاء</string>
+    <string name="field_cardholder">حامل البطاقة</string>
+    <string name="confirm_and_save">تأكيد وحفظ</string>
+    <string name="rescan">إعادة المسح</string>
+    <string name="edit">تعديل</string>
+    <string name="verify_cardholder_name">يرجى التحقق من اسم حامل البطاقة</string>
+    <string name="verify_expiration_date">يرجى التحقق من تاريخ الانتهاء</string>
+    <string name="unsupported_card_title">بطاقة غير مدعومة</string>
+    <string name="unsupported_card_message">لا تبدو هذه بطاقة Visa. البطاقات المدعومة هي بطاقات Visa فقط.</string>
+
+    <!-- Edit screen -->
+    <string name="edit_title">تعديل السجل</string>
+    <string name="cardholder_name">اسم حامل البطاقة</string>
+    <string name="expiration_date">تاريخ الانتهاء (شهر/سنة)</string>
+    <string name="notes">ملاحظات</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="invalid_expiry_format">استخدم التنسيق شهر/سنة، مثل 12/2029</string>
+    <string name="masked_card_readonly">رقم البطاقة (للقراءة فقط، مُقنَّع)</string>
+
+    <!-- History screen -->
+    <string name="history_title">سجل المسح</string>
+    <string name="search_hint">ابحث بالأرقام الأربعة أو الاسم أو السنة أو الشركة</string>
+    <string name="no_records">لم يتم مسح أي بطاقة بعد</string>
+    <string name="delete_record">حذف السجل</string>
+    <string name="delete_confirm">حذف هذا السجل؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete">حذف</string>
+    <string name="records_count">%1$d سجلًا</string>
+    <string name="clear_search">مسح البحث</string>
+
+    <!-- Export -->
+    <string name="export_to_excel">تصدير إلى Excel</string>
+    <string name="share_excel_file">مشاركة ملف Excel</string>
+    <string name="export_success">تم التصدير بنجاح</string>
+    <string name="export_cancelled">تم إلغاء التصدير</string>
+    <string name="export_failed">فشل تصدير Excel. يرجى المحاولة مرة أخرى.</string>
+    <string name="export_security_rejected">تم رفض التصدير: يحتوي الملف على بيانات يجب ألا تُصدَّر أبدًا.</string>
+    <string name="export_no_records">لا توجد سجلات للتصدير</string>
+    <string name="export_create_file">إنشاء ملف</string>
+    <string name="export_scan_again">تم التحقق من الملف المصدَّر مرة أخرى قبل المشاركة.</string>
+
+    <!-- Duplicate detection -->
+    <string name="duplicate_title">تكرار محتمل</string>
+    <string name="duplicate_message">يبدو أن هذه البطاقة قد تم مسحها مسبقًا.</string>
+    <string name="save_another_record">حفظ سجل آخر</string>
+
+    <!-- Errors -->
+    <string name="error_camera_unavailable">الكاميرا غير متاحة. قد يكون هناك تطبيق آخر يستخدمها.</string>
+    <string name="error_permission_denied">تم رفض إذن الكاميرا. فعّله من إعدادات النظام لمسح البطاقات.</string>
+    <string name="error_card_not_detected">تعذّر التعرف على البطاقة. جرّب وضع البطاقة على سطح مستوٍ بإضاءة أفضل.</string>
+    <string name="error_ocr_failure">تعذّرت قراءة البطاقة. حاول مرة أخرى مع وضع البطاقة بحيث تواجه الكاميرا وبإضاءة جيدة.</string>
+    <string name="error_invalid_card">رقم البطاقة غير صالح.</string>
+    <string name="error_luhn_failure">فشل التحقق من رقم البطاقة. حاول المسح مرة أخرى.</string>
+    <string name="error_unsupported_card">هذه البطاقة غير مدعومة. يمكن مسح بطاقات Visa فقط.</string>
+    <string name="error_missing_expiry">لم يتم العثور على تاريخ الانتهاء. يمكنك إدخاله يدويًا.</string>
+    <string name="error_missing_cardholder">لم يتم العثور على اسم حامل البطاقة. يمكنك إدخاله يدويًا.</string>
+    <string name="error_invalid_expiry">تاريخ الانتهاء غير صالح.</string>
+    <string name="error_duplicate_record">تم مسح هذه البطاقة مسبقًا.</string>
+    <string name="error_generic">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="ok">حسنًا</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="close">إغلاق</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_card_frame">إطار مسح البطاقات. ضع بطاقة الدفع بالكامل داخل هذا الإطار.</string>
+    <string name="a11y_confidence_indicator">جودة التعرف: %1$s</string>
+    <string name="a11y_back">الرجوع</string>
+    <string name="a11y_scan_state">حالة الماسح: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_security_note">لا يحفظ هذا التطبيق أبدًا رقم البطاقة الكامل أو رمز التحقق أو صور البطاقات. تتم جميع المعالجة على هذا الجهاز فقط.</string>
+</resources>
