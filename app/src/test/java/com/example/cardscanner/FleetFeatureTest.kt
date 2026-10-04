@@ -158,6 +158,34 @@ class FleetFeatureTest {
         )
     }
 
+
+    /** v1.1.1 regression: scan output -> factory -> fleet export round-trip. */
+    @Test
+    fun scanSavePathProducesFleetReadableRecord() {
+        // Simulate the scanner boundary output (TransientPan.consume result).
+        val safe = com.example.cardscanner.ocr.SafeCardData(
+            maskedPan = "**** **** **** 1234",
+            last4 = "1234",
+            bin6 = "401288",
+        )
+        val created = FleetCardFactory.create(
+            scan = FleetCardFactory.ScanInput(
+                maskedPan = safe.maskedPan,
+                last4 = safe.last4,
+                bin6 = safe.bin6,
+                cardholderName = "MOHAMED SALAH ALI",
+                expiryMonth = 12,
+                expiryYear = 2029,
+            ),
+            fleet = FleetCardFactory.FleetFields(vehicleNumber = "VH-104"),
+        )
+        assertEquals("401288", created.bin6)
+        assertEquals("VH-104", created.vehicleNumber)
+        // The history-facing exporter must accept it (same table the UI reads).
+        val result = ExcelExporter.buildWorkbookPure(listOf(created), validator)
+        assertTrue(result is ExcelExporter.Result.Success)
+    }
+
     private fun readSheet(xlsxBytes: ByteArray): String {
         ZipInputStream(ByteArrayInputStream(xlsxBytes)).use { zip ->
             var entry = zip.nextEntry

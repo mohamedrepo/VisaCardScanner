@@ -55,12 +55,19 @@ class TransientPan private constructor(digits: String) {
             return String(digits.takeLast(4).toCharArray())
         }
 
+    /** First six digits — the open card-network BIN used by fleet tools. */
+    val bin6: String
+        get() {
+            check(!consumed) { "TransientPan already consumed" }
+            return String(digits.take(6).toCharArray())
+        }
+
     val masked: String
         get() = PanSanitizer.mask(last4)
 
     /**
-     * Returns the masked + last-4 pair and irreversibly destroys the stored digits.
-     * A second call throws because the value no longer exists.
+     * Returns the masked + last-4 + BIN6 triple and irreversibly destroys the
+     * stored digits. A second call throws because the value no longer exists.
      */
     fun consume(): MaskedResult {
         check(!consumed) { "TransientPan already consumed" }
@@ -68,12 +75,13 @@ class TransientPan private constructor(digits: String) {
         val result = MaskedResult(
             maskedPan = PanSanitizer.mask(String(digits.takeLast(4).toCharArray())),
             last4 = String(digits.takeLast(4).toCharArray()),
+            bin6 = String(digits.take(6).toCharArray()),
         )
         digits.fill('0')
         return result
     }
 
-    data class MaskedResult(val maskedPan: String, val last4: String)
+    data class MaskedResult(val maskedPan: String, val last4: String, val bin6: String)
 
     companion object {
         /**

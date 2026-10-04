@@ -19,11 +19,14 @@ class MainActivity : ComponentActivity() {
         SensitiveDataGuard.applySecureFlag(window)
         enableEdgeToEdge()
 
-        val repository = (application as CardScannerApplication).repository
-        val fleetRepository = (application as CardScannerApplication).fleetRepository
+        val app = application as CardScannerApplication
 
         setContent {
-            CardScannerApp(repository = repository, fleetRepository = fleetRepository)
+            CardScannerApp(
+                repository = app.repository,
+                fleetRepository = app.fleetRepository,
+                auditLogger = app.auditLogger,
+            )
         }
     }
 }

@@ -106,20 +106,28 @@ fun ConfirmationRoute(
                 Column(modifier = Modifier.padding(20.dp)) {
                     FieldRow(stringResource(R.string.field_brand), "VISA")
                     Spacer(Modifier.height(10.dp))
-                    FieldRow(stringResource(R.string.field_card), safe.maskedPan)
+                    FieldRow(stringResource(R.string.fleet_bin_display), safe.bin6 + " •••• " + safe.last4)
                     Spacer(Modifier.height(10.dp))
 
-                    val expiryText: String = confirmation.editable.expiryText.ifBlank {
-                        result.expiryMonth?.let { m ->
-                            result.expiryYear?.let { y -> "%02d/%04d".format(m, y) }
-                        } ?: "—"
+                    val expiryFromResult: String = run {
+                        val m = result.expiryMonth
+                        val y = result.expiryYear
+                        if (m != null && y != null) "%02d/%04d".format(m, y) else "—"
                     }
+                    val expiryText: String =
+                        if (confirmation.editable.expiryText.isBlank()) expiryFromResult
+                        else confirmation.editable.expiryText
                     FieldRow(stringResource(R.string.field_expiry), expiryText)
                     Spacer(Modifier.height(10.dp))
+                    val cardholderText: String =
+                        if (confirmation.editable.cardholderName.isBlank()) {
+                            result.cardholderName ?: "—"
+                        } else {
+                            confirmation.editable.cardholderName
+                        }
                     FieldRow(
                         label = stringResource(R.string.field_cardholder),
-                        value = confirmation.editable.cardholderName
-                            .ifBlank { result.cardholderName ?: "—" },
+                        value = cardholderText,
                     )
                 }
             }
@@ -167,6 +175,38 @@ fun ConfirmationRoute(
                 )
                 Spacer(Modifier.height(12.dp))
                 OutlinedTextField(
+                    value = confirmation.editable.vehicleNumber,
+                    onValueChange = confirmation::onVehicleChanged,
+                    label = { Text(stringResource(R.string.fleet_vehicle)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = confirmation.editable.plateNumber,
+                    onValueChange = confirmation::onPlateChanged,
+                    label = { Text(stringResource(R.string.fleet_plate)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = confirmation.editable.driverName,
+                    onValueChange = confirmation::onDriverChanged,
+                    label = { Text(stringResource(R.string.fleet_driver)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = confirmation.editable.provider,
+                    onValueChange = confirmation::onProviderChanged,
+                    label = { Text(stringResource(R.string.fleet_provider)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
                     value = confirmation.editable.notes,
                     onValueChange = confirmation::onNotesChanged,
                     label = { Text(stringResource(R.string.notes)) },
@@ -198,11 +238,24 @@ fun ConfirmationRoute(
             }
         }
 
-        if (confirmation.duplicateDetected) {
+        val duplicate: com.example.cardscanner.data.FleetCard? = confirmation.duplicateDetected
+        if (duplicate != null) {
+            val existingCard = duplicate
+            val existingVehicle: String = duplicate.vehicleNumber ?: ""
             AlertDialog(
                 onDismissRequest = { confirmation.dismissDuplicate() },
                 title = { Text(stringResource(R.string.duplicate_title)) },
-                text = { Text(stringResource(R.string.duplicate_message)) },
+                text = {
+                    Column {
+                        Text(stringResource(R.string.duplicate_message))
+                        Spacer(Modifier.height(8.dp))
+                        Text(existingCard.binDisplay, fontWeight = FontWeight.SemiBold)
+                        if (existingVehicle.isNotEmpty()) {
+                            Text(stringResource(R.string.fleet_vehicle) + ": " + existingVehicle)
+                        }
+                        Text(existingCard.status)
+                    }
+                },
                 confirmButton = {
                     TextButton(onClick = { confirmation.confirmAndSave(acceptDuplicate = true) }) {
                         Text(stringResource(R.string.save_another_record))

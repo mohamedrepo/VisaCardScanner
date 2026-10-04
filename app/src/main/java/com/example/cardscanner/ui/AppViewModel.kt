@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.example.cardscanner.data.CardRepository
+import com.example.cardscanner.data.AuditLogger
 import com.example.cardscanner.data.FleetRepository
 import com.example.cardscanner.ui.confirmation.ConfirmationViewModel
 import com.example.cardscanner.ui.history.HistoryViewModel
@@ -28,12 +29,13 @@ class AppViewModel(
 fun rememberAppViewModel(
     repository: CardRepository,
     fleetRepository: FleetRepository,
+    auditLogger: AuditLogger,
 ): AppViewModel {
     val scope: CoroutineScope = rememberCoroutineScope()
     val appContext: Context = LocalContext.current.applicationContext
-    return remember(repository, fleetRepository) {
+    return remember(repository, fleetRepository, auditLogger) {
         val scannerVm = ScannerViewModel(repository)
-        val confirmationVm = ConfirmationViewModel(repository, scannerVm, scope)
+        val confirmationVm = ConfirmationViewModel(fleetRepository, auditLogger, scannerVm, scope)
         val historyVm = HistoryViewModel(fleetRepository, appContext)
         AppViewModel(repository, fleetRepository, scannerVm, confirmationVm, historyVm)
     }

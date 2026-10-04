@@ -71,6 +71,7 @@ class CardOcrEngine {
                 SafeCardData(
                     maskedPan = consumed.maskedPan,
                     last4 = consumed.last4,
+                    bin6 = consumed.bin6,
                 )
             }
             else -> null
@@ -102,6 +103,7 @@ class CardOcrEngine {
 data class SafeCardData(
     val maskedPan: String,
     val last4: String,
+    val bin6: String,
 )
 
 /**
