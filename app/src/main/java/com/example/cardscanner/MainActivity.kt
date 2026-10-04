@@ -20,9 +20,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val repository = (application as CardScannerApplication).repository
+        val fleetRepository = (application as CardScannerApplication).fleetRepository
 
         setContent {
-            CardScannerApp(repository = repository)
+            CardScannerApp(repository = repository, fleetRepository = fleetRepository)
         }
     }
 }

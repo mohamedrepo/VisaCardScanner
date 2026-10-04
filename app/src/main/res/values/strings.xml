@@ -99,4 +99,61 @@
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_security_note">This app never stores the full card number, CVV, or card images. All processing happens on this device only.</string>
+
+    <!-- App lock (spec section 5) -->
+    <string name="lock_setup_pin">Choose an administrator PIN (4-12 digits)</string>
+    <string name="lock_enter_pin">Enter administrator PIN</string>
+    <string name="lock_pin">PIN</string>
+    <string name="lock_confirm_pin">Confirm PIN</string>
+    <string name="lock_set_pin">Set PIN</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_biometric">Use fingerprint / face</string>
+    <string name="lock_biometric_title">Unlock Fleet Card Scanner</string>
+    <string name="lock_biometric_negative">Use PIN</string>
+    <string name="lock_pin_wrong">Incorrect PIN</string>
+    <string name="lock_pin_mismatch">PINs do not match, or PIN is too short</string>
+
+    <!-- Fleet fields (spec section 12) -->
+    <string name="fleet_bin_display">Card (BIN •••• Last 4)</string>
+    <string name="fleet_vehicle">Vehicle number</string>
+    <string name="fleet_plate">Plate number</string>
+    <string name="fleet_driver">Driver name</string>
+    <string name="fleet_employee_id">Employee ID</string>
+    <string name="fleet_department">Department</string>
+    <string name="fleet_fuel_type">Fuel type</string>
+    <string name="fleet_provider">Card provider</string>
+    <string name="fleet_status">Card status</string>
+    <string name="fleet_issue_date">Issue date</string>
+    <string name="fleet_replacement_date">Replacement date</string>
+    <string name="fleet_replaces">Replaces card</string>
+
+    <!-- Export modes (spec section 18) -->
+    <string name="export_encrypted_default">Encrypted export (recommended)</string>
+    <string name="export_passphrase">Export passphrase</string>
+    <string name="export_passphrase_hint">You will need this passphrase to open the file</string>
+    <string name="export_plain_warning_title">Export unprotected Excel?</string>
+    <string name="export_plain_warning">This file contains fleet card identifiers and will not be encrypted. Continue?</string>
+    <string name="export_plain_confirm">Export</string>
+
+    <!-- Dashboard (spec sections 33-34) -->
+    <string name="dashboard_title">Fleet Overview</string>
+    <string name="dashboard_by_status">Cards by status</string>
+    <string name="dashboard_by_fuel">Cards by fuel type</string>
+    <string name="dashboard_by_provider">Cards by provider</string>
+    <string name="dashboard_by_department">Cards by department</string>
+    <string name="dashboard_expiring_title">Cards expiring soon</string>
+    <string name="dashboard_expiring_days">Next %1$s days</string>
+
+    <!-- Audit (spec section 24) -->
+    <string name="audit_title">Audit Log</string>
+    <string name="audit_empty">No activity recorded yet</string>
+
+    <!-- Statuses -->
+    <string name="status_active">Active</string>
+    <string name="status_suspended">Suspended</string>
+    <string name="status_lost">Lost</string>
+    <string name="status_stolen">Stolen</string>
+    <string name="status_expired">Expired</string>
+    <string name="status_replacement">Replacement</string>
+    <string name="status_cancelled">Cancelled</string>
 </resources>

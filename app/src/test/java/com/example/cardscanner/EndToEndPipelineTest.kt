@@ -67,13 +67,13 @@ class EndToEndPipelineTest {
         assertEquals(2029, record.expiryYear)
 
         // ---- 3. Export stage: build workbook + security scan --------------
-        val export = ExcelExporter.buildWorkbookPure(listOf(record), validator)
+        val export = ExcelExporter.buildWorkbookPure(listOf(toFleet(record)), validator)
         assertTrue("export must pass the security scan", export is ExcelExporter.Result.Success)
         val bytes = (export as ExcelExporter.Result.Success).bytes
 
         // ---- 4. Independent verification: re-open the archive -------------
         val sheetXml = readEntry(bytes, "xl/worksheets/sheet1.xml")
-        assertTrue(sheetXml.contains("**** **** **** 1111"))
+        assertTrue(sheetXml.contains("401288 •••• 1111"))
         assertTrue(sheetXml.contains("MOHAMED SALAH ALI"))
         assertTrue(sheetXml.contains("12"))
         assertTrue(sheetXml.contains("2029"))
@@ -100,22 +100,27 @@ class EndToEndPipelineTest {
     fun panInNotesCellBlocksExport() {
         val columns = ExcelExporter.APPROVED_COLUMNS.map { XlsxColumn(it.title, it.width, it.kind) }
         val writer = XlsxWriter("Card Records", columns)
-        writer.addRow(
-            listOf(
-                CellValue.Text("001"),
-                CellValue.Text("VISA"),
-                CellValue.Text("**** **** **** 1234"),
-                CellValue.Int32(1234),
-                CellValue.Int32(12),
-                CellValue.Int32(2029),
-                CellValue.Text("MOHAMED SALAH ALI"),
-                CellValue.DateTime(Instant.parse("2026-10-04T16:30:22Z")),
-                // Attack payload hidden in a free-text field:
-                CellValue.Text("reissued from 4012888888881881"),
-            ),
+        val cols = ExcelExporter.APPROVED_COLUMNS.map { XlsxColumn(it.title, it.width, it.kind) }
+        val w = XlsxWriter("Card Records", cols)
+        val row: MutableList<CellValue> = mutableListOf(
+            CellValue.Text("001"),
+            CellValue.Text("QNB"),
+            CellValue.Text("VISA"),
+            CellValue.Text("401288"),
+            CellValue.Int32(1234),
+            CellValue.Text("**** **** **** 1234"),
+            CellValue.Text("MOHAMED SALAH ALI"),
+            CellValue.Int32(12),
+            CellValue.Int32(2029),
         )
+        // Pad vehicle/plate/driver/employee/dept/fuel/status/issue/repl/replaces
+        repeat(10) { row.add(CellValue.Text("")) }
+        row.add(CellValue.DateTime(Instant.parse("2026-10-04T16:30:22Z")))
+        // Attack payload hidden in a free-text field:
+        row.add(CellValue.Text("reissued from 4012888888881881"))
+        w.addRow(row)
         val buffer = java.io.ByteArrayOutputStream()
-        writer.writeTo(buffer)
+        w.writeTo(buffer)
 
         val verdict = validator.validate(
             buffer.toByteArray(),
@@ -126,6 +131,24 @@ class EndToEndPipelineTest {
             verdict is ExportSecurityValidator.Verdict.Rejected,
         )
     }
+
+
+    /** Wraps a legacy v1.0 CardRecord into a FleetCard for the new exporter. */
+    private fun toFleet(record: CardRecord): com.example.cardscanner.data.FleetCard =
+        com.example.cardscanner.data.FleetCard(
+            id = record.id,
+            bin6 = "401288",
+            last4 = record.last4,
+            maskedPan = record.maskedPan,
+            cardBrand = record.brand,
+            cardholderName = record.cardholderName,
+            expiryMonth = record.expiryMonth,
+            expiryYear = record.expiryYear,
+            status = com.example.cardscanner.data.CardStatus.ACTIVE,
+            notes = record.notes,
+            createdAt = record.scannedAt,
+            updatedAt = record.scannedAt,
+        )
 
     private fun readEntry(xlsxBytes: ByteArray, entryName: String): String {
         ZipInputStream(ByteArrayInputStream(xlsxBytes)).use { zip ->

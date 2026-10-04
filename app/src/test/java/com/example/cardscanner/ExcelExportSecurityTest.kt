@@ -36,7 +36,25 @@ class ExcelExportSecurityTest {
     )
 
     private fun build(records: List<CardRecord>): ExcelExporter.Result =
-        ExcelExporter.buildWorkbookPure(records, validator)
+        ExcelExporter.buildWorkbookPure(records.map { toFleet(it) }, validator)
+
+
+    /** Wraps a legacy v1.0 CardRecord into a FleetCard for the new exporter. */
+    private fun toFleet(record: CardRecord): com.example.cardscanner.data.FleetCard =
+        com.example.cardscanner.data.FleetCard(
+            id = record.id,
+            bin6 = "401288",
+            last4 = record.last4,
+            maskedPan = record.maskedPan,
+            cardBrand = record.brand,
+            cardholderName = record.cardholderName,
+            expiryMonth = record.expiryMonth,
+            expiryYear = record.expiryYear,
+            status = com.example.cardscanner.data.CardStatus.ACTIVE,
+            notes = record.notes,
+            createdAt = record.scannedAt,
+            updatedAt = record.scannedAt,
+        )
 
     private fun assertClean(result: ExcelExporter.Result): ExcelExporter.Result.Success {
         assertTrue("expected export to succeed but got: $result", result is ExcelExporter.Result.Success)
@@ -117,12 +135,12 @@ class ExcelExportSecurityTest {
         }
     }
 
-    /** Test 9b: the masked form, not digits, is what lands in the sheet. */
+    /** Test 9b: the masked display form, not raw digits, lands in the sheet. */
     @Test
     fun maskedPanAppearsInWorkbook() {
         val bytes = assertClean(build(listOf(record()))).bytes
         val sheetText = readSheetText(bytes)
-        assertTrue(sheetText.contains("**** **** **** 1234"))
+        assertTrue(sheetText.contains("401288 •••• 1234"))
     }
 
     /** Reads the sheet1 XML out of the workbook archive (it is deflate-compressed). */
@@ -145,19 +163,21 @@ class ExcelExportSecurityTest {
             XlsxColumn(it.title, it.width, it.kind)
         }
         val writer = XlsxWriter("Card Records", columns)
-        writer.addRow(
-            listOf(
-                CellValue.Text("001"),
-                CellValue.Text("VISA"),
-                CellValue.Text(cardNumberText),
-                CellValue.Int32(1234),
-                CellValue.Int32(12),
-                CellValue.Int32(2029),
-                CellValue.Text("ATTACKER"),
-                CellValue.DateTime(Instant.parse("2026-10-04T16:30:22Z")),
-                CellValue.Text(""),
-            ),
+        val row: MutableList<CellValue> = mutableListOf(
+            CellValue.Text("001"),
+            CellValue.Text("QNB"),
+            CellValue.Text("VISA"),
+            CellValue.Text("401288"),
+            CellValue.Int32(1234),
+            CellValue.Text(cardNumberText),
+            CellValue.Text("ATTACKER"),
+            CellValue.Int32(12),
+            CellValue.Int32(2029),
         )
+        repeat(10) { row.add(CellValue.Text("")) }
+        row.add(CellValue.DateTime(Instant.parse("2026-10-04T16:30:22Z")))
+        row.add(CellValue.Text(""))
+        writer.addRow(row)
         val buffer = java.io.ByteArrayOutputStream()
         writer.writeTo(buffer)
         return buffer.toByteArray()

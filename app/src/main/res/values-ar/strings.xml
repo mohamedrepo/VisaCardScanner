@@ -99,4 +99,61 @@
     <!-- Settings -->
     <string name="settings_title">الإعدادات</string>
     <string name="settings_security_note">لا يحفظ هذا التطبيق أبدًا رقم البطاقة الكامل أو رمز التحقق أو صور البطاقات. تتم جميع المعالجة على هذا الجهاز فقط.</string>
+
+    <!-- App lock -->
+    <string name="lock_setup_pin">اختر رمز PIN للمسؤول (4-12 رقمًا)</string>
+    <string name="lock_enter_pin">أدخل رمز PIN للمسؤول</string>
+    <string name="lock_pin">رمز PIN</string>
+    <string name="lock_confirm_pin">تأكيد رمز PIN</string>
+    <string name="lock_set_pin">تعيين رمز PIN</string>
+    <string name="lock_unlock">فتح</string>
+    <string name="lock_biometric">استخدام بصمة الإصبع / الوجه</string>
+    <string name="lock_biometric_title">فتح ماسح بطاقات الأسطول</string>
+    <string name="lock_biometric_negative">استخدام رمز PIN</string>
+    <string name="lock_pin_wrong">رمز PIN غير صحيح</string>
+    <string name="lock_pin_mismatch">رمزا PIN غير متطابقين، أو أن الرمز قصير جدًا</string>
+
+    <!-- Fleet fields -->
+    <string name="fleet_bin_display">البطاقة (BIN •••• آخر 4)</string>
+    <string name="fleet_vehicle">رقم السيارة</string>
+    <string name="fleet_plate">رقم اللوحة</string>
+    <string name="fleet_driver">اسم السائق</string>
+    <string name="fleet_employee_id">رقم الموظف</string>
+    <string name="fleet_department">القسم</string>
+    <string name="fleet_fuel_type">نوع الوقود</string>
+    <string name="fleet_provider">شركة البطاقة</string>
+    <string name="fleet_status">حالة البطاقة</string>
+    <string name="fleet_issue_date">تاريخ الإصدار</string>
+    <string name="fleet_replacement_date">تاريخ الاستبدال</string>
+    <string name="fleet_replaces">بديل للبطاقة</string>
+
+    <!-- Export modes -->
+    <string name="export_encrypted_default">تصدير مشفّر (موصى به)</string>
+    <string name="export_passphrase">كلمة مرور التصدير</string>
+    <string name="export_passphrase_hint">ستحتاج إلى كلمة المرور هذه لفتح الملف</string>
+    <string name="export_plain_warning_title">تصدير Excel غير محمي؟</string>
+    <string name="export_plain_warning">يحتوي هذا الملف على معرّفات بطاقات الأسطول ولن يكون مشفرًا. هل تريد المتابعة؟</string>
+    <string name="export_plain_confirm">تصدير</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">نظرة عامة على الأسطول</string>
+    <string name="dashboard_by_status">البطاقات حسب الحالة</string>
+    <string name="dashboard_by_fuel">البطاقات حسب نوع الوقود</string>
+    <string name="dashboard_by_provider">البطاقات حسب الشركة</string>
+    <string name="dashboard_by_department">البطاقات حسب القسم</string>
+    <string name="dashboard_expiring_title">بطاقات تنتهي قريبًا</string>
+    <string name="dashboard_expiring_days">خلال %1$s يومًا</string>
+
+    <!-- Audit -->
+    <string name="audit_title">سجل التدقيق</string>
+    <string name="audit_empty">لا يوجد نشاط مسجل بعد</string>
+
+    <!-- Statuses -->
+    <string name="status_active">نشطة</string>
+    <string name="status_suspended">موقوفة</string>
+    <string name="status_lost">مفقودة</string>
+    <string name="status_stolen">مسروقة</string>
+    <string name="status_expired">منتهية</string>
+    <string name="status_replacement">بديلة</string>
+    <string name="status_cancelled">ملغاة</string>
 </resources>

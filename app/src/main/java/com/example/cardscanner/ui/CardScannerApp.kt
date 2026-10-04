@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cardscanner.data.CardRepository
+import com.example.cardscanner.data.FleetRepository
 import com.example.cardscanner.ui.confirmation.ConfirmationRoute
 import com.example.cardscanner.ui.history.HistoryRoute
 import com.example.cardscanner.ui.scanner.ScanPhase
@@ -26,9 +27,9 @@ object Destinations {
  * data cannot leak into saved instance state or system UI.
  */
 @Composable
-fun CardScannerApp(repository: CardRepository) {
+fun CardScannerApp(repository: CardRepository, fleetRepository: FleetRepository) {
     val navController = rememberNavController()
-    val viewModel = rememberAppViewModel(repository)
+    val viewModel = rememberAppViewModel(repository, fleetRepository)
 
     NavHost(navController = navController, startDestination = Destinations.SCANNER) {
         composable(Destinations.SCANNER) {

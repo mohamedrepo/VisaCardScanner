@@ -47,7 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.cardscanner.R
-import com.example.cardscanner.data.CardRecord
+import com.example.cardscanner.data.FleetCard
 import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -84,7 +84,7 @@ fun HistoryRoute(
         }
     }
 
-    var recordToDelete by remember { mutableStateOf<CardRecord?>(null) }
+    var recordToDelete by remember { mutableStateOf<FleetCard?>(null) }
 
     Scaffold(
         topBar = {
@@ -100,7 +100,7 @@ fun HistoryRoute(
                 },
                 actions = {
                     IconButton(
-                        onClick = { viewModel.prepareExport() },
+                        onClick = { viewModel.preparePlainExport() },
                         enabled = records.isNotEmpty(),
                     ) {
                         Icon(
@@ -221,9 +221,9 @@ fun HistoryRoute(
 }
 
 @Composable
-private fun RecordCard(record: CardRecord, onDelete: () -> Unit) {
+private fun RecordCard(record: FleetCard, onDelete: () -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
-    val scannedText = record.scannedAt.atZone(ZoneId.systemDefault()).format(formatter)
+    val scannedText = record.updatedAt.atZone(ZoneId.systemDefault()).format(formatter)
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -245,7 +245,7 @@ private fun RecordCard(record: CardRecord, onDelete: () -> Unit) {
                     .padding(horizontal = 10.dp, vertical = 6.dp),
             ) {
                 Text(
-                    text = record.brand,
+                    text = record.cardBrand,
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
@@ -257,7 +257,7 @@ private fun RecordCard(record: CardRecord, onDelete: () -> Unit) {
                     .padding(start = 12.dp),
             ) {
                 Text(
-                    text = record.maskedPan,
+                    text = record.binDisplay,
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.bodyLarge,
                 )
@@ -271,6 +271,14 @@ private fun RecordCard(record: CardRecord, onDelete: () -> Unit) {
                         record.cardholderName?.let { name ->
                             append("  ·  ")
                             append(name)
+                        }
+                        record.vehicleNumber?.let { v ->
+                            append("  ·  ")
+                            append(v)
+                        }
+                        record.status.let { s ->
+                            append("  ·  ")
+                            append(s)
                         }
                     },
                     style = MaterialTheme.typography.bodySmall,
