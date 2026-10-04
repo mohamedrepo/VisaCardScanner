@@ -47,9 +47,13 @@ object PanSanitizer {
 class TransientPan private constructor(digits: String) {
 
     private val digits: CharArray = digits.toCharArray()
+    private var consumed = false
 
     val last4: String
-        get() = String(digits.takeLast(4).toCharArray())
+        get() {
+            check(!consumed) { "TransientPan already consumed" }
+            return String(digits.takeLast(4).toCharArray())
+        }
 
     val masked: String
         get() = PanSanitizer.mask(last4)
@@ -59,7 +63,8 @@ class TransientPan private constructor(digits: String) {
      * A second call throws because the value no longer exists.
      */
     fun consume(): MaskedResult {
-        check(digits.isNotEmpty()) { "TransientPan already consumed" }
+        check(!consumed) { "TransientPan already consumed" }
+        consumed = true
         val result = MaskedResult(
             maskedPan = PanSanitizer.mask(String(digits.takeLast(4).toCharArray())),
             last4 = String(digits.takeLast(4).toCharArray()),

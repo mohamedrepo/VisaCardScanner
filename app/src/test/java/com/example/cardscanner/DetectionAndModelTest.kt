@@ -27,7 +27,7 @@ class DetectionAndModelTest {
         val b = (rect.d * height).toInt()
         for (y in t..b) {
             for (x in l..r) {
-                luma[y * width + x] = 235
+                luma[y * width + x] = 235.toByte()
             }
         }
         return luma
@@ -54,14 +54,14 @@ class DetectionAndModelTest {
         val width = 640
         val height = 480
         val luma = ByteArray(width * height) { 20 }
-        for (y in 200..240) for (x in 300..340) luma[y * width + x] = 235
+        for (y in 200..240) for (x in 300..340) luma[y * width + x] = 235.toByte()
         assertNull(detector.detect(luma, width, height))
     }
 
     @Test
     fun blankFrameIsRejected() {
         val detector = CardDetector()
-        assertNull(detector.detect(ByteArray(640 * 480) { 128 }, 640, 480))
+        assertNull(detector.detect(ByteArray(640 * 480) { 128.toByte() }, 640, 480))
     }
 
     /** Duplicate detection is Brand + Last4 + Expiry equality (spec §13). */

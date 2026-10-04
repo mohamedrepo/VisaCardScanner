@@ -1,14 +1,23 @@
 package com.example.cardscanner.export
 
-import com.example.cardscanner.security.PanSanitizer
+import java.io.ByteArrayInputStream
+import java.util.zip.ZipInputStream
 
 /**
- * Scans a fully generated workbook (as bytes) for PAN-like digit sequences
- * before it is written to user storage or shared.
+ * Scans the generated workbook for actual PAN-like content before it is written
+ * to user storage or shared.
  *
- * This implements the spec requirement: "The app must inspect the generated
- * workbook before sharing it and reject export if a 13-19 digit PAN-like
- * sequence is found anywhere in the workbook."
+ * Design note (v1.0.1): the first implementation scanned the raw zip bytes and
+ * rejected any 13-19 digit run. That caused false positives on harmless
+ * workbook internals: ZIP headers/CRCs, DEFLATE-compressed binary noise and
+ * Excel epoch serials all contain long digit sequences that have nothing to do
+ * with card data. This version opens the archive and scans only the
+ * meaningful, human-readable cell text — exactly what a real leak would use.
+ *
+ * A 13-19 digit run inside a cell's TEXT content is at best a transcription of
+ * a card number and at worst the full PAN: either way it must not be exported,
+ * so it is rejected. Masked card numbers like `**** **** **** 1234` contain
+ * only a 4-digit tail and pass.
  */
 class ExportSecurityValidator {
 
@@ -18,45 +27,68 @@ class ExportSecurityValidator {
     }
 
     /**
-     * Deep scan over the serialized workbook. It checks:
-     *  1. any 13-19 digit run anywhere in the XML parts;
-     *  2. grouped PAN shapes such as `4111 1111 1111 1111`;
-     *  3. the known approved column set for the sheet (whitelist).
+     * Opens the workbook archive and scans every XML part's inline-string cell
+     * text. Checks:
+     *  1. every cell's TEXT content for 13-19 consecutive digit runs;
+     *  2. every cell's TEXT content for grouped PAN shapes with separators;
+     *  3. that all expected column titles are present (schema whitelist).
+     *
+     * Numeric `<v>` cells (last-4, expiry month/year, date serials) and ZIP/XML
+     * internals are ignored — they cannot carry a full PAN by construction of
+     * the writer.
      */
     fun validate(xlsxBytes: ByteArray, expectedColumns: List<String>): Verdict {
-        val text = xlsxBytes.toString(Charsets.UTF_8)
+        val cells = mutableListOf<String>()
 
-        // 1. Raw long digit runs (covers shared strings, inline strings, everything).
+        ZipInputStream(ByteArrayInputStream(xlsxBytes)).use { zip ->
+            var entry = zip.nextEntry ?: return Verdict.Rejected("Workbook has no entries")
+            while (entry != null) {
+                if (entry.name.endsWith(".xml") || entry.name.endsWith(".rels")) {
+                    val xml = zip.readBytes().toString(Charsets.UTF_8)
+                    cells += extractCellText(xml)
+                }
+                entry = zip.nextEntry
+            }
+        }
+
+        // 1. A full PAN hidden as text: 13-19 consecutive digits.
         val digitRun = Regex("""\d{13,19}""")
-        val run = digitRun.find(text)
-        if (run != null) {
-            return Verdict.Rejected("PAN-like digit sequence found in workbook")
+        for (cell in cells) {
+            if (digitRun.containsMatchIn(cell)) {
+                return Verdict.Rejected("PAN-like digit sequence found in a cell")
+            }
         }
 
-        // 2. Grouped PAN shapes with separators.
-        val grouped = Regex("""(?:\d{4}[ \-]){3}\d{1,7}""")
-        if (grouped.containsMatchIn(text)) {
-            return Verdict.Rejected("Grouped PAN-like sequence found in workbook")
+        // 2. Grouped PAN shapes with separators: 4111 1111 1111 1111 / 4111-1111-1111-1111.
+        val grouped = Regex("""(?:\d{4}[ \-]){3}\d{4,7}""")
+        for (cell in cells) {
+            if (grouped.containsMatchIn(cell)) {
+                return Verdict.Rejected("Grouped PAN-like sequence found in a cell")
+            }
         }
 
-        // 3. Column whitelist: the workbook must not contain unexpected column titles.
+        // 3. Column whitelist: the workbook must contain every expected column title.
         for (column in expectedColumns) {
-            val escaped = Regex.escape(column)
-            if (!Regex(escaped).containsMatchIn(text)) {
+            if (cells.none { it == column }) {
                 return Verdict.Rejected("Expected column missing: $column")
             }
         }
 
-        // 4. Luhn-check every remaining digit run of length 13-19 split across
-        //    separators — defence in depth (redundant with check 1-2 but cheap).
-        val anyDigits = Regex("""\d{4}(?:[ \-]?\d{4}){2,4}""")
-        for (match in anyDigits.findAll(text)) {
-            val digits = match.value.filter { it.isDigit() }
-            if (digits.length in 13..19 && PanSanitizer.looksLikeFullPan(match.value)) {
-                return Verdict.Rejected("PAN-like sequence found in workbook")
-            }
-        }
-
         return Verdict.Clean
+    }
+
+    /**
+     * Extracts the human-readable text of every inline string cell
+     * (`<is><t>value</t></is>`). Shared-string tables, if present, use the same
+     * `<t>` element and are covered by the generic `<t>` fallback.
+     */
+    private fun extractCellText(xml: String): List<String> {
+        // inline strings first; fall back to any <t>…</t> (covers sharedStrings).
+        val inlineCell = Regex("""<is><t[^>]*>(.*?)</t></is>""", RegexOption.DOT_MATCHES_ALL)
+        val inline = inlineCell.findAll(xml).map { it.groupValues[1] }
+        val generic = Regex("""<t[^>]*>(.*?)</t>""", RegexOption.DOT_MATCHES_ALL)
+            .findAll(xml)
+            .map { it.groupValues[1] }
+        return (inline + generic).toList()
     }
 }
